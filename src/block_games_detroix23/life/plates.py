@@ -1,0 +1,97 @@
+"""
+# Block games.
+/src/block_games_detroix23/life/plates.py
+"""
+
+from block_games_detroix23 import vectors
+
+NEIGHBORS: list[vectors.Vector2D[int]] = [
+	vectors.Vector2D(0, 1),
+	vectors.Vector2D(1, 1),
+	vectors.Vector2D(1, 0),
+	vectors.Vector2D(1, -1),
+	vectors.Vector2D(0, -1),
+	vectors.Vector2D(-1, -1),
+	vectors.Vector2D(-1, 0),
+	vectors.Vector2D(-1, 1),
+]
+
+class Plate:
+	"""
+	# Conway's game of life `Plate` for the cells.
+	Holds the cell position reference `set`, rules, `update` methods. 
+	"""
+	iteration: int
+	cells: set[vectors.Vector2D[int]]
+	underpopulation_threshold: int
+	""" Die if neighbor count is strictly inferior. """
+	overpopulation_threshold: int
+	""" Die if neighbor count is strictly superior. """
+	reproduction: int
+	""" Spawn if neighbor count is equal. """
+
+	def __init__(
+		self, 
+		starting_cells: set[vectors.Vector2D[int]],
+		underpopulation_threshold: int,
+		overpopulation_threshold: int,
+		reproduction: int,
+	) -> None:
+		"""
+		Initialize the `Plate`: `cells`, and rules. 
+		"""
+		self.iteration = 0
+		self.cells = starting_cells
+		self.underpopulation_threshold = underpopulation_threshold
+		self.overpopulation_threshold = overpopulation_threshold
+		self.reproduction = reproduction
+
+	def count_neighbors(self, position: vectors.Vector2D[int]) -> int:
+		"""
+		Returns neighbor count.
+		"""
+		count: int = 0
+		for relative in NEIGHBORS:
+			if position + relative in self.cells:
+				count += 1
+
+		return count
+	
+	def is_alive(self, position: vectors.Vector2D[int]) -> bool:
+		"""
+		Check, according to the rules, if tile at `position` should be occupied by a living cell.
+		"""
+		neighbors: int = self.count_neighbors(position)
+		print(neighbors)
+
+		return (
+			position in self.cells and (
+				neighbors < self.underpopulation_threshold 
+				or neighbors > self.overpopulation_threshold
+			)
+			or neighbors == self.reproduction 
+		)
+
+	def update(self) -> None:
+		"""
+		General update of all cell in `cells`:
+		- check its life;
+		- look for reproduction in neighbor empty cells.
+		"""
+		new: set[vectors.Vector2D[int]] = set()
+
+		for cell in self.cells:
+			if self.is_alive(cell):
+				new.add(cell)
+
+			for relative in NEIGHBORS:
+				neighbor: vectors.Vector2D[int] = cell + relative
+				if (
+					neighbor not in self.cells 
+					and neighbor not in new
+					and self.is_alive(neighbor)
+				):
+					new.add(neighbor)
+		
+		print(f"(?) life.plates.Plate.update() cell difference d={len(self.cells) - len(new)}")
+		self.cells = new
