@@ -60,6 +60,12 @@ class Vector2D(Generic[T_VEC]):
 			self.y + other.y
 		)
 
+	def __str__(self) -> str:
+		return f"({self.x}; {self.y})"
+	
+	def __repr__(self) -> str:
+		return f"Vector2D[{T_VEC.__class__.__name__}](x={self.x}, y={self.y})"
+
 	def tuple(self) -> tuple[T_VEC, T_VEC]:
 		"""
 		Returns a `tuple[T_VEC, T_VEC]` representation of `self`.

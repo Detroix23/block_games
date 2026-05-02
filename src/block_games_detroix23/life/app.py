@@ -23,10 +23,11 @@ class App:
 		self.screen_size = screen_size
 		self.plate = plates.Plate(
 			starting_cells={
-				vectors.Vector2D(0, 0),
-				vectors.Vector2D(1, 0),
-				vectors.Vector2D(1, 1),
-				vectors.Vector2D(0, 2),
+				vectors.Vector2D(0, 1),
+				vectors.Vector2D(2, 0),
+				vectors.Vector2D(2, 1),
+				vectors.Vector2D(2, 2),
+				vectors.Vector2D(1, 2),
 			},
 			underpopulation_threshold=2,
 			overpopulation_threshold=3,
@@ -45,7 +46,7 @@ class App:
 			screen_size.x, 
 			screen_size.y,
 			title="Conway's game of life.",
-			fps=30,
+			fps=25,
 			quit_key=pyxel.KEY_ESCAPE,
 		)
 

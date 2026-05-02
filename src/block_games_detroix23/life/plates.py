@@ -62,15 +62,16 @@ class Plate:
 		Check, according to the rules, if tile at `position` should be occupied by a living cell.
 		"""
 		neighbors: int = self.count_neighbors(position)
-		print(neighbors)
-
-		return (
+		live: bool = (
 			position in self.cells and (
-				neighbors < self.underpopulation_threshold 
-				or neighbors > self.overpopulation_threshold
+				neighbors >= self.underpopulation_threshold 
+				and neighbors <= self.overpopulation_threshold
 			)
 			or neighbors == self.reproduction 
 		)
+		
+		#print(f"(?) life.plates.Plate.is_alive({position}) n={neighbors}, in:{position in self.cells}, +:{live}")
+		return live
 
 	def update(self) -> None:
 		"""
@@ -93,5 +94,7 @@ class Plate:
 				):
 					new.add(neighbor)
 		
-		print(f"(?) life.plates.Plate.update() cell difference d={len(self.cells) - len(new)}")
+		length_difference = len(self.cells) - len(new)
+		changes = len(self.cells.symmetric_difference(new))
+		print(f"(?) life.plates.Plate.update() d(length)={length_difference}, q(changes)={changes}")
 		self.cells = new

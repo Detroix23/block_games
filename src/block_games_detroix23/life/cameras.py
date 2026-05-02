@@ -65,11 +65,9 @@ class Camera:
 
 		if pyxel.mouse_wheel > 0:
 			self.zoom *= self.scroll_speed * pyxel.mouse_wheel
-			print(f"(?) life.cameras.Camera.update() zoom={self.zoom}")
 		elif pyxel.mouse_wheel < 0 and self.zoom > 1.0:
 			self.zoom /= self.scroll_speed * abs(pyxel.mouse_wheel)
 			self.zoom = max(self.zoom, 1.0)
-			print(f"(?) life.cameras.Camera.update() zoom={self.zoom}")
 
 	def draw(self) -> None:
 		"""
