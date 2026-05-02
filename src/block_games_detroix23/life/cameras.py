@@ -50,15 +50,15 @@ class Camera:
 		"""
 		Return the `move_speed` altered by `zoom`.
 		"""
-		return self.move_speed * math.sqrt(self.zoom)
+		return self.move_speed / math.sqrt(self.zoom)
 	
 	def screen_position(self, cell: vectors.Vector2D[int]) -> vectors.Vector2D[float]:
 		"""
 		From a `cell_position`, returns the on-screen position.
 		"""
 		return vectors.Vector2D(
-			cell.x * self.zoom + pyxel.width // 2 - self.position.x,
-			cell.y * self.zoom + pyxel.height // 2 - self.position.y,
+			(cell.x - self.position.x) * self.zoom + pyxel.width // 2,
+			(cell.y - self.position.y) * self.zoom + pyxel.height // 2,
 		)
 		
 

@@ -9,7 +9,6 @@ def main() -> None:
 	"""
 	Block games: main entry point.
 	"""
-
 	run_life()
 	
 
