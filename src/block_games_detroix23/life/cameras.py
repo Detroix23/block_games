@@ -28,6 +28,7 @@ class Camera:
 	position: vectors.Vector2D[float]
 	move_speed: float
 	scroll_speed: float
+	disable_sprite: bool
 
 	def __init__(
 		self, 
@@ -36,19 +37,31 @@ class Camera:
 		position: vectors.Vector2D[float],
 		move_speed: float,
 		scroll_speed: float,
+		disable_sprite: bool,
 	) -> None:
 		self.parent_app = parent_app
 		self.zoom = zoom
 		self.position = position
 		self.move_speed = move_speed
 		self.scroll_speed = scroll_speed
+		self.disable_sprite = disable_sprite
 
 	def get_displacement_speed(self) -> float:
 		"""
 		Return the `move_speed` altered by `zoom`.
 		"""
 		return self.move_speed * math.sqrt(self.zoom)
- 
+	
+	def screen_position(self, cell: vectors.Vector2D[int]) -> vectors.Vector2D[float]:
+		"""
+		From a `cell_position`, returns the on-screen position.
+		"""
+		return vectors.Vector2D(
+			cell.x * self.zoom + pyxel.width // 2 - self.position.x,
+			cell.y * self.zoom + pyxel.height // 2 - self.position.y,
+		)
+		
+
 	def update(self) -> None:
 		"""
 		Update the `Camera`. Listen to inputs.
@@ -63,7 +76,7 @@ class Camera:
 		if pyxel.btn(pyxel.KEY_DOWN):
 			self.position.y -= self.get_displacement_speed()
 
-		if pyxel.mouse_wheel > 0:
+		if pyxel.mouse_wheel > 0 and self.zoom < 1073741824:
 			self.zoom *= self.scroll_speed * pyxel.mouse_wheel
 		elif pyxel.mouse_wheel < 0 and self.zoom > 1.0:
 			self.zoom /= self.scroll_speed * abs(pyxel.mouse_wheel)
@@ -73,33 +86,29 @@ class Camera:
 		"""
 		Draw, to `pyxel` screen, all cells.
 		"""
-		# 
-
 
 		# Cells
-		if self.zoom > 1.0:
+		if not self.disable_sprite and self.zoom > 1.0:
 			for cell in self.parent_app.get_cells():
-				x: float = cell.x * self.zoom - self.position.x - Camera.SPRITE_CELL_SIZE.x // 2
-				y: float = cell.y * self.zoom - self.position.y - Camera.SPRITE_CELL_SIZE.y // 2
+				position: vectors.Vector2D[float] = self.screen_position(cell) - Camera.SPRITE_CELL_SIZE // int(2)
 				pyxel.blt(
-					x,
-					y,
+					position.x,
+					position.y,
 					img=Camera.SPRITE_CELL_IMAGE,
 					u=Camera.SPRITE_CELL_POSITION.x,
 					v=Camera.SPRITE_CELL_POSITION.y,
 					w=Camera.SPRITE_CELL_SIZE.x,
 					h=Camera.SPRITE_CELL_SIZE.y,
-					scale=Camera.SPRITE_CELL_SCALE * self.zoom,
+					scale=Camera.SPRITE_CELL_SCALE * math.ceil(self.zoom),
 				)
 		else:
 			for cell in self.parent_app.get_cells():
-				x: float = cell.x * self.zoom - self.position.x
-				y: float = cell.y * self.zoom - self.position.y
+				position: vectors.Vector2D[float] = self.screen_position(cell)
 				pyxel.rect(
-					x,
-					y,
-					w=1.0,
-					h=1.0,
+					position.x,
+					position.y,
+					w=math.ceil(self.zoom),
+					h=math.ceil(self.zoom),
 					col=pyxel.COLOR_WHITE,
 				)
 		

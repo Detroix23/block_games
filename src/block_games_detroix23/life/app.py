@@ -28,10 +28,8 @@ class App:
 		self.plate = plates.Plate(
 			starting_cells={
 				vectors.Vector2D(0, 1),
-				vectors.Vector2D(2, 0),
-				vectors.Vector2D(2, 1),
-				vectors.Vector2D(2, 2),
-				vectors.Vector2D(1, 2),
+				vectors.Vector2D(0, 0),
+				vectors.Vector2D(0, -1),
 			},
 			underpopulation_threshold=2,
 			overpopulation_threshold=3,
@@ -43,6 +41,7 @@ class App:
 			position=vectors.Vector2D(0.0, 0.0),
 			move_speed=3.0,
 			scroll_speed=1.5,
+			disable_sprite=False,
 		)
 		self.ui = interfaces.Ui(
 			parent_app=self,

@@ -3,10 +3,11 @@
 /src/block_games_detroix23/vectors.py
 """
 
-from typing import Union, TypeVar, Generic
+from typing import Union, TypeVar, Generic, overload
 
 T_VEC = TypeVar("T_VEC", bound=Union[int, float])
 """ `T_VEC`: `int` | `float`, generic type for `Vector2D`. """
+
 
 class Vector2D(Generic[T_VEC]):
 	x: T_VEC
@@ -60,6 +61,36 @@ class Vector2D(Generic[T_VEC]):
 			self.y + other.y
 		)
 
+	@overload
+	def __sub__(self: Vector2D[int], other: Vector2D[int]) -> Vector2D[int]: ...
+	@overload
+	def __sub__(self: Vector2D[int], other: Vector2D[float]) -> Vector2D[float]: ...
+	@overload
+	def __sub__(self: Vector2D[float], other: Vector2D[int]) -> Vector2D[float]: ...
+	@overload
+	def __sub__(self: Vector2D[float], other: Vector2D[float]) -> Vector2D[float]: ...
+
+	def __sub__(self: _Vector, other: _Vector) -> _Vector:
+		"""
+		Return a _new_ `Vector2D` by adding.
+		"""
+		return Vector2D(
+			self.x - other.x,
+			self.y - other.y
+		)
+
+	def __mul__(self: Vector2D[float], other: float | int) -> Vector2D[float]:
+		return Vector2D(
+			self.x * other,
+			self.y * other
+		)
+
+	def __floordiv__(self: Vector2D[int], other: int) -> Vector2D[int]:
+		return Vector2D(
+			self.x // other,
+			self.y // other
+		)
+
 	def __str__(self) -> str:
 		return f"({self.x}; {self.y})"
 	
@@ -72,3 +103,5 @@ class Vector2D(Generic[T_VEC]):
 		"""
 		return (self.x, self.y)
 	
+_Vector = Union[Vector2D[int], Vector2D[float]]
+""" Helper `Union` that covers all vector types. """

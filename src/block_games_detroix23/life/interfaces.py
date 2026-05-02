@@ -41,18 +41,55 @@ class Ui:
 		"""
 		Draw using `pyxel` all text, cursor and grid.
 		"""
+		# Center.
+		pyxel.rect(
+			x=pyxel.width / 2,
+			y=0.0,
+			w=1.0,
+			h=pyxel.height,
+			col=pyxel.COLOR_GRAY,
+		)
+		pyxel.rect(
+			x=0.0,
+			y=pyxel.height / 2,
+			w=pyxel.width,
+			h=1,
+			col=pyxel.COLOR_GRAY,
+		)
+
 		# Text.
 		lines: list[str] = [
 			f"Population: {len(self.parent_app.get_cells())}",
 			f"Generation: {self.parent_app.plate.iteration}",
 			f"Speed: {self.parent_app.time_speed}",
+			f"Position: {self.parent_app.camera.position.x:.1f}; {self.parent_app.camera.position.y:.1f}",
+			f"Zoom: {self.parent_app.camera.zoom:.3f}",
 		]
 
 		for y, line in enumerate(lines):
-			pyxel.text(self.text_padding.x, self.text_padding.y + 8 * y, line, pyxel.COLOR_WHITE)
-
+			pyxel.text(
+				self.text_padding.x, 
+				self.text_padding.y + 8 * y, 
+				line, 
+				pyxel.COLOR_WHITE,
+			)
 		
 		# Cursor.
+		pyxel.rect(
+			x=pyxel.mouse_x,
+			y=0.0,
+			w=1.0,
+			h=pyxel.height,
+			col=pyxel.COLOR_LIME
+		)
+		pyxel.rect(
+			x=0.0,
+			y=pyxel.mouse_y,
+			w=pyxel.width,
+			h=1.0,
+			col=pyxel.COLOR_LIME
+		)
+
 		pyxel.blt(
 			pyxel.mouse_x - Ui.SPRITE_MOUSE_SIZE.x // 2,
 			pyxel.mouse_y - Ui.SPRITE_MOUSE_SIZE.y // 2,
