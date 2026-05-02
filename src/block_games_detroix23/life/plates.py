@@ -94,7 +94,8 @@ class Plate:
 				):
 					new.add(neighbor)
 		
-		length_difference = len(self.cells) - len(new)
-		changes = len(self.cells.symmetric_difference(new))
-		print(f"(?) life.plates.Plate.update() d(length)={length_difference}, q(changes)={changes}")
+		_length_difference: int = len(self.cells) - len(new)
+		_changes: int = len(self.cells.symmetric_difference(new))
+		# print(f"(?) life.plates.Plate.update() d(length)={_length_difference}, q(changes)={_changes}")
+		self.iteration += 1
 		self.cells = new

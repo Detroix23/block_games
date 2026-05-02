@@ -73,10 +73,14 @@ class Camera:
 		"""
 		Draw, to `pyxel` screen, all cells.
 		"""
+		# 
+
+
+		# Cells
 		if self.zoom > 1.0:
 			for cell in self.parent_app.get_cells():
-				x: float = cell.x * self.zoom - self.position.x - Camera.SPRITE_CELL_SIZE.x / 2
-				y: float = cell.y * self.zoom - self.position.y - Camera.SPRITE_CELL_SIZE.y / 2
+				x: float = cell.x * self.zoom - self.position.x - Camera.SPRITE_CELL_SIZE.x // 2
+				y: float = cell.y * self.zoom - self.position.y - Camera.SPRITE_CELL_SIZE.y // 2
 				pyxel.blt(
 					x,
 					y,
@@ -98,3 +102,4 @@ class Camera:
 					h=1.0,
 					col=pyxel.COLOR_WHITE,
 				)
+		

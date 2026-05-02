@@ -6,15 +6,19 @@
 import pyxel
 
 from block_games_detroix23 import definitions, vectors
-from block_games_detroix23.life import plates, cameras
+from block_games_detroix23.life import plates, cameras, interfaces
 
 class App:
 	"""
 	# Conway's game of life `App`.
 	"""
+
 	plate: plates.Plate
 	camera: cameras.Camera
+	ui: interfaces.Ui
 	screen_size: vectors.Vector2D[int]
+	time_speed: int
+	""" Frame between updates. """
 
 	def __init__(self, screen_size: vectors.Vector2D[int]) -> None:
 		"""
@@ -40,6 +44,11 @@ class App:
 			move_speed=3.0,
 			scroll_speed=1.5,
 		)
+		self.ui = interfaces.Ui(
+			parent_app=self,
+			text_padding=vectors.Vector2D(2, 2),
+		)
+		self.time_speed = 1
 
 		print("(?) life.App.__init__() Initializing `pyxel`.")
 		pyxel.init(
@@ -78,4 +87,4 @@ class App:
 		"""
 		pyxel.cls(pyxel.COLOR_BLACK)
 		self.camera.draw()
-
+		self.ui.draw()
